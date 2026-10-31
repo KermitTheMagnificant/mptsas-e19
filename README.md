@@ -113,7 +113,7 @@ lspci -k | grep -A 3 -i SAS1068
 To confirm it started up.
 
 ## After a Kernel Update
-Since this driver only works for this kernel, you'll need to remake it after a kernel update. running the following commands will do that (more indepth documentation in the future, probably)
+Since this driver only works for this kernel, you'll need to remake it after a kernel update. running the following commands will do that:
 ```bash
     sudo dnf install -y kernel-devel-$(uname -r)
     cd mptsas-el9
@@ -124,6 +124,14 @@ Since this driver only works for this kernel, you'll need to remake it after a k
     sudo depmod -a
     sudo modprobe mptsas
 ```
+Breakdown:
+- Gets new header files to build the out of tree modules
+- Goes into the install dir
+- (make clean and make) Builds it
+- Makes the new extra folder w/ the new headers
+- Copies the new build into the new extra folder
+- Updates module list
+- Restarts the Kernel Modules
 
 ## Uninstall
 To uninstall, run:
@@ -133,6 +141,12 @@ To uninstall, run:
     sudo rm -f /etc/modules-load.d/mptsas.conf
     sudo depmod -a
 ```
+## What Was Changed With the Driver?
+1. `mptscsih.c`: the call to `blk_queue_dma_alignment()` is commented out.
+   The function no longer exists, and its 512-byte setting is the default.
+2. `mptsas.c`: the `eh_timed_out` handler uses the newer
+   `enum scsi_timeout_action` type and `SCSI_EH_*` values instead of
+   `enum blk_eh_timer_return` and `BLK_EH_*`.
 
 ## License
 
