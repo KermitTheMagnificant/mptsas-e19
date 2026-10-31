@@ -3,8 +3,22 @@
 A Fusion-MPT SAS Driver which is patched to run on RHEL 9.8 (also only currently tested system). Made for LSI SAS1068E controllers.
 
 The specific kernel version this has been tested on is kernel 5.14.0-687.61.1.el9_8.x86_64 (RHEL 9.8), others might need some tweaks.
+You can either build it manually using the below build instructions, or use install.sh to install it yourself.
 
-# Install Guide 
+# Automatic Install Guide
+cd into the directory of the repo after download and run ./install.sh.
+What does it do?
+1. Re-runs itself with sudo if you aren’t root.
+2. Checks that it’s inside the repo folder and that the source files are there.
+3. Looks for the SAS1068 controller with lspci and asks before continuing if it isn’t found.
+4. Checks Secure Boot with mokutil and warns if it’s enabled, since the module won’t load then.
+5. Installs gcc, make, elfutils-libelf-devel and the kernel-devel package that matches the running kernel.
+6. Runs make clean and make, then confirms that all three .ko files were built.
+7. Copies the modules to /lib/modules/<kernel>/extra/ and runs depmod -a.
+8. Writes /etc/modules-load.d/mptsas.conf so the driver loads at boot.
+9. Loads the driver with modprobe, then prints lsmod, lspci -k and lsblk so you can see whether it worked.
+
+# Manual Install Guide 
 ## Before Install
 First, check that the controller is the right one. Run:
 
