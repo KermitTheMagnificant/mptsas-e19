@@ -5,6 +5,8 @@ A Fusion-MPT SAS Driver which is patched to run on RHEL 9.8 (also only currently
 The specific kernel version this has been tested on is kernel 5.14.0-687.61.1.el9_8.x86_64 (RHEL 9.8), others might need some tweaks.
 You can either build it manually using the below build instructions, or use install.sh to install it yourself.
 
+NOTE: I plan on soon making it so the driver update with the release of a new Linux kernel, although that is as of right now (11/1/26) not fully implemented.
+
 # Automatic Install Guide
 cd into the directory of the repo after download and run ./install.sh.
 What does it do?
